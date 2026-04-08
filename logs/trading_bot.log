@@ -1,5 +1,0 @@
-2026-02-12 11:38:51.697436 | INFO | bot.orders | Placing order: symbol=BTCUSDT, side=BUY, type=MARKET, quantity=0.001
-2026-02-12 11:38:51.697455 | INFO | bot.orders | Order response: {'orderId': 123456, 'status': 'FILLED', 'executedQty': '0.001', 'avgPrice': '50000'}
-
-2026-02-12 11:38:51.697457 | INFO | bot.orders | Placing order: symbol=BTCUSDT, side=SELL, type=LIMIT, quantity=0.001, price=60000
-2026-02-12 11:38:51.697459 | INFO | bot.orders | Order response: {'orderId': 123457, 'status': 'NEW', 'executedQty': '0', 'avgPrice': '0'}
