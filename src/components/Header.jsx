@@ -4,43 +4,50 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function Header({ currentMonth, onPrevMonth, onNextMonth }) {
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full gap-6">
-      <div className="flex flex-col relative justify-center">
-        <span className="text-xl md:text-2xl font-black text-rose-500/80 tracking-[0.4em] uppercase mb-1">
-          {format(currentMonth, "yyyy")}
-        </span>
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={currentMonth.toISOString()}
-            initial={{ opacity: 0, y: 20, filter: "blur(8px)" }}
-            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: -20, filter: "blur(8px)" }}
-            transition={{ type: "spring", stiffness: 200, damping: 20 }}
-          >
-            <h2 className="text-5xl sm:text-6xl md:text-7xl font-black text-white tracking-tighter drop-shadow-[0_0_20px_rgba(255,255,255,0.3)]">
-              {format(currentMonth, "MMMM")}
-            </h2>
-          </motion.div>
-        </AnimatePresence>
+    <div className="flex flex-col sm:flex-row items-center justify-between w-full gap-8">
+      <div className="flex items-center gap-6">
+        <div className="flex flex-col">
+            <span className="text-xs font-black text-violet-500 tracking-[0.5em] uppercase mb-1 opacity-80">
+                {format(currentMonth, "yyyy")}
+            </span>
+            <AnimatePresence mode="wait">
+                <motion.div
+                    key={currentMonth.toISOString()}
+                    initial={{ opacity: 0, x: -20, filter: "blur(10px) brightness(2)" }}
+                    animate={{ opacity: 1, x: 0, filter: "blur(0px) brightness(1)" }}
+                    exit={{ opacity: 0, x: 20, filter: "blur(10px) brightness(0)" }}
+                    transition={{ duration: 0.3, ease: "circOut" }}
+                >
+                    <h2 className="text-6xl sm:text-7xl font-black text-white tracking-tighter mix-blend-difference">
+                    {format(currentMonth, "MMMM")}
+                    </h2>
+                </motion.div>
+            </AnimatePresence>
+        </div>
       </div>
-      <div className="flex space-x-4 z-20 self-end sm:self-auto">
+
+      <div className="flex items-center gap-3 p-1.5 bg-white/[0.03] backdrop-blur-3xl rounded-3xl border border-white/5 shadow-inner">
         <motion.button 
-          whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.1)" }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.08)" }}
+          whileTap={{ scale: 0.9 }}
           onClick={onPrevMonth} 
-          className="p-4 rounded-2xl bg-white/[0.05] text-white/80 transition-all border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)] hover:text-rose-400 hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.4)] backdrop-blur-md"
+          className="p-4 rounded-2xl text-white/40 hover:text-white transition-all duration-300"
         >
-          <ChevronLeft className="w-8 h-8 stroke-[2.5]" />
+          <ChevronLeft className="w-6 h-6" />
         </motion.button>
+        
+        <div className="w-[1px] h-8 bg-white/10" />
+
         <motion.button 
-          whileHover={{ scale: 1.1, backgroundColor: "rgba(255,255,255,0.1)" }}
-          whileTap={{ scale: 0.95 }}
+          whileHover={{ scale: 1.05, backgroundColor: "rgba(255,255,255,0.08)" }}
+          whileTap={{ scale: 0.9 }}
           onClick={onNextMonth} 
-          className="p-4 rounded-2xl bg-white/[0.05] text-white/80 transition-all border border-white/10 shadow-[0_0_15px_rgba(0,0,0,0.5)] hover:text-rose-400 hover:border-rose-500/50 hover:shadow-[0_0_20px_rgba(244,63,94,0.4)] backdrop-blur-md"
+          className="p-4 rounded-2xl text-white/40 hover:text-white transition-all duration-300"
         >
-          <ChevronRight className="w-8 h-8 stroke-[2.5]" />
+          <ChevronRight className="w-6 h-6" />
         </motion.button>
       </div>
     </div>
   );
 }
+

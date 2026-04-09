@@ -10,64 +10,103 @@ export function DayCell({ date, isCurrentMonth, isSelectedStart, isSelectedEnd, 
   const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div 
+    <motion.div 
       onClick={() => onClick(date)} 
       onMouseEnter={() => { onMouseEnter(date); setIsHovered(true); }}
       onMouseLeave={() => setIsHovered(false)}
-      className="relative flex items-center justify-center h-20 sm:h-24 w-full cursor-pointer group"
+      whileHover={{ 
+        scale: 1.05, 
+        rotateX: 10,
+        rotateY: -10,
+        z: 20
+      }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+      className="relative flex items-center justify-center h-20 sm:h-24 w-full cursor-pointer group perspective-1000"
     >
+      {/* Range Background */}
       {(isInRange || isHoverRange) && !isSelected && (
-        <div className="absolute inset-0 bg-white/[0.05] shadow-[0_0_20px_rgba(255,255,255,0.05)_inset] my-2 mx-[-4px] rounded-lg" />
-      )}
-      {isSelectedStart && (isInRange || isHoverRange || isSelectedEnd) && (
-        <div className="absolute top-2 bottom-2 right-[-4px] w-[calc(50%+4px)] bg-rose-500/20 shadow-[0_0_15px_rgba(244,63,94,0.3)] rounded-l-2xl" />
-      )}
-      {isSelectedEnd && (isSelectedStart || isInRange) && (
-        <div className="absolute top-2 bottom-2 left-[-4px] w-[calc(50%+4px)] bg-rose-500/20 shadow-[0_0_15px_rgba(244,63,94,0.3)] rounded-r-2xl" />
-      )}
-      {isSelected && (
         <motion.div 
-          className="absolute w-16 h-16 sm:w-20 sm:h-20 bg-white/10 backdrop-blur-md rounded-2xl shadow-[0_0_30px_rgba(255,255,255,0.2)] border border-white/30 z-0" 
-          initial={{ scale: 0, rotate: -45 }} 
-          animate={{ scale: 1, rotate: 0 }} 
-          transition={{ type: "spring", stiffness: 350, damping: 20 }} 
+          layoutId="range"
+          className="absolute inset-0 bg-violet-500/10 backdrop-blur-sm mx-[-2px] my-[2px] rounded-xl border border-violet-500/20" 
         />
       )}
-      {!isSelected && isCurrentMonth && (
-        <div className="absolute w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-transparent group-hover:border-white/20 group-hover:bg-white/[0.03] transition-all duration-300 z-0" />
+      
+      {/* Selection Backgrounds */}
+      {isSelectedStart && (isInRange || isHoverRange || isSelectedEnd) && (
+        <div className="absolute top-2 bottom-2 right-[-4px] w-[calc(50%+4px)] bg-violet-500/20 rounded-l-2xl" />
       )}
+      {isSelectedEnd && (isSelectedStart || isInRange) && (
+        <div className="absolute top-2 bottom-2 left-[-4px] w-[calc(50%+4px)] bg-violet-500/20 rounded-r-2xl" />
+      )}
+
+      {/* Main Selection Bubble */}
+      {isSelected && (
+        <motion.div 
+          layoutId="selection"
+          className="absolute w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-violet-500 to-indigo-600 rounded-2xl shadow-[0_0_30px_rgba(139,92,246,0.5)] z-0" 
+          initial={{ scale: 0, rotate: -45 }} 
+          animate={{ scale: 1, rotate: 0 }} 
+          transition={{ type: "spring", stiffness: 500, damping: 30 }} 
+        />
+      )}
+
+      {/* Hover Ring */}
+      {!isSelected && isCurrentMonth && (
+        <div className="absolute w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-transparent group-hover:border-white/20 group-hover:bg-white/[0.05] transition-all duration-200 z-0" />
+      )}
+
+      {/* Date Number */}
       <span className={cn(
-        "relative z-10 text-2xl font-black transition-all duration-200",
-        !isCurrentMonth && "text-white/20",
-        isCurrentMonth && !isWeekend && !today && !isSelected && "text-white/70 group-hover:text-white drop-shadow-md",
-        isCurrentMonth && isWeekend && !isSelected && "text-rose-400 drop-shadow-[0_0_10px_rgba(244,63,94,0.5)]",
-        today && !isSelected && "text-purple-400 drop-shadow-[0_0_15px_rgba(168,85,247,0.8)] font-black",
-        isSelected && "text-white drop-shadow-[0_0_15px_rgba(255,255,255,1)]"
+        "relative z-10 text-2xl font-black transition-all duration-200 tracking-tighter",
+        !isCurrentMonth && "text-white/10",
+        isCurrentMonth && !isWeekend && !today && !isSelected && "text-white/60 group-hover:text-white group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]",
+        isCurrentMonth && isWeekend && !isSelected && "text-rose-500/80 drop-shadow-[0_0_8px_rgba(244,63,94,0.3)]",
+        today && !isSelected && "text-transparent bg-clip-text bg-gradient-to-r from-violet-400 to-indigo-400 font-black",
+        isSelected && "text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.8)]"
       )}>
         {format(date, "d")}
       </span>
+
+      {/* Indicators */}
       {today && !isSelected && (
-        <div className="absolute bottom-2 sm:bottom-3 w-2.5 h-2.5 bg-purple-400 rounded-full shadow-[0_0_10px_purple] z-10" />
+        <motion.div 
+          layoutId="today-indicator"
+          className="absolute bottom-2 sm:bottom-3 w-1.5 h-1.5 bg-violet-400 rounded-full shadow-[0_0_10px_#8b5cf6] z-10" 
+        />
       )}
+      
       {notePreview && !isSelected && (
         <div className="absolute top-2 right-2 sm:top-3 sm:right-3 z-10">
-          <MessageSquareText className="w-5 h-5 text-amber-300 drop-shadow-[0_0_8px_rgba(251,191,36,0.8)]" />
+          <motion.div
+            animate={{ scale: [1, 1.2, 1] }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            <MessageSquareText className="w-4 h-4 text-emerald-400 drop-shadow-[0_0_8px_rgba(52,211,153,0.5)]" />
+          </motion.div>
         </div>
       )}
+
+      {/* Note Tooltip */}
       <AnimatePresence>
         {isHovered && notePreview && (
           <motion.div 
-            initial={{ opacity: 0, y: 10, scale: 0.9, filter: "blur(5px)" }}
-            animate={{ opacity: 1, y: -10, scale: 1, filter: "blur(0px)" }}
-            exit={{ opacity: 0, y: 10, scale: 0.9, filter: "blur(5px)" }}
-            className="absolute bottom-full mb-3 w-56 p-5 bg-black/60 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_10px_40px_rgba(0,0,0,0.8)] z-50 pointer-events-none"
+            initial={{ opacity: 0, y: 10, scale: 0.8, rotateX: 20 }}
+            animate={{ opacity: 1, y: -12, scale: 1, rotateX: 0 }}
+            exit={{ opacity: 0, y: 10, scale: 0.8, rotateX: 20 }}
+            className="absolute bottom-full mb-4 w-64 p-5 bg-black/80 backdrop-blur-2xl border border-white/10 rounded-2xl shadow-[0_20px_50px_rgba(0,0,0,0.9)] z-50 pointer-events-none"
           >
-            <p className="text-sm font-bold text-white/90 line-clamp-3 leading-relaxed">
-              {notePreview}
-            </p>
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] uppercase tracking-widest text-emerald-400 font-bold">Planned Insight</span>
+              <p className="text-sm font-medium text-white/90 leading-relaxed italic">
+                "{notePreview}"
+              </p>
+            </div>
+            <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-black/80 rotate-45 border-r border-b border-white/10" />
           </motion.div>
         )}
       </AnimatePresence>
-    </div>
+    </motion.div>
   );
 }
+
